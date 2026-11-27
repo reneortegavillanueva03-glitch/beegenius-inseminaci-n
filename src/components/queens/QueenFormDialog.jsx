@@ -85,10 +85,6 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
       toast.error("El código de la reina es obligatorio");
       return;
     }
-    if (queen?.apiary && form.apiary !== queen.apiary) {
-      toast.error(`Reina agregada: ya está registrada en el apiario ${queen.apiary}`);
-      return;
-    }
     const existing = await base44.entities.Queen.filter({ code }, { limit: 5 });
     const other = existing.items.find((item) => item.id !== queen?.id);
     if (other?.apiary && other.apiary !== form.apiary) {
@@ -125,19 +121,8 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
             </SelectContent>
           </Select>
         </Field>
-        <Field
-          label="Apiario"
-          hint={
-            queen?.apiary
-              ? `Ya registrada en el apiario ${queen.apiary}: no se puede pasar a otro.`
-              : undefined
-          }
-        >
-          <Select
-            value={form.apiary || "none"}
-            disabled={!!queen?.apiary}
-            onValueChange={(v) => set("apiary", v === "none" ? "" : v)}
-          >
+        <Field label="Apiario">
+          <Select value={form.apiary || "none"} onValueChange={(v) => set("apiary", v === "none" ? "" : v)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecciona apiario" />
             </SelectTrigger>
