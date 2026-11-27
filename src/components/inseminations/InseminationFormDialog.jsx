@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Field from "@/components/common/Field";
 import FormDialog from "@/components/common/FormDialog";
 import { RESULT_OPTIONS } from "@/lib/labels";
+import useAppUsers, { userLabel } from "@/lib/useAppUsers";
 
 function today() {
   return new Date().toISOString().slice(0, 10);
@@ -82,6 +83,12 @@ export default function InseminationFormDialog({ open, onOpenChange, queens = []
   }));
   if (form.droneOrigin && !motherOptions.some((option) => option.value === form.droneOrigin)) {
     motherOptions.unshift({ value: form.droneOrigin, label: form.droneOrigin });
+  }
+
+  const { data: users = [] } = useAppUsers();
+  const technicianOptions = users.map((user) => ({ value: userLabel(user), label: userLabel(user) }));
+  if (form.technician && !technicianOptions.some((option) => option.value === form.technician)) {
+    technicianOptions.unshift({ value: form.technician, label: form.technician });
   }
 
   const mutation = useMutation({
@@ -219,7 +226,19 @@ export default function InseminationFormDialog({ open, onOpenChange, queens = []
           />
         </Field>
         <Field label="Técnico">
-          <Input value={form.technician} onChange={(e) => set("technician", e.target.value)} />
+          <Select value={form.technician || "none"} onValueChange={(v) => set("technician", v === "none" ? "" : v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona técnico" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Sin técnico</SelectItem>
+              {technicianOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </Field>
         <Field label="Resultado">
           <Select value={form.result} onValueChange={(v) => set("result", v)}>
