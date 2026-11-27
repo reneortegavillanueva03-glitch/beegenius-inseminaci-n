@@ -1,0 +1,84 @@
+{
+  "type": "object",
+  "name": "Drone",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo del z\u00e1ngano o del lote, por ejemplo Z-26-014"
+    },
+    "line": {
+      "type": "string",
+      "description": "L\u00ednea de cr\u00eda de los z\u00e1nganos"
+    },
+    "colony": {
+      "type": "string",
+      "description": "Colmena de origen"
+    },
+    "emergenceDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de nacimiento"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "disponible",
+        "colectado",
+        "descartado"
+      ],
+      "enumColors": [
+        "green",
+        "yellow",
+        "gray"
+      ],
+      "default": "disponible"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "code"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

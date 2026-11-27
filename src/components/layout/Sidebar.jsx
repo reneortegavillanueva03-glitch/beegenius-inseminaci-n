@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { LayoutDashboard, Crown, Syringe, Boxes, Container, Hexagon, ListChecks, BarChart3, X, LogOut } from "lucide-react";
+import { LayoutDashboard, Crown, Bug, Syringe, Boxes, Container, Hexagon, ListChecks, BarChart3, X, LogOut } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +9,7 @@ const SECTIONS = [
     items: [
       { href: "/", label: "Panel", icon: LayoutDashboard },
       { href: "/reinas", label: "Reinas", icon: Crown },
+      { href: "/zanganos", label: "Zánganos", icon: Bug },
       { href: "/inseminaciones", label: "Inseminaciones", icon: Syringe },
       { href: "/nucleos", label: "Núcleos", icon: Boxes },
       { href: "/colmenas", label: "Colmenas", icon: Container },

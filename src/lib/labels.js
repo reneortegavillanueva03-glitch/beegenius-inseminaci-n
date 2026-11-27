@@ -36,6 +36,17 @@ export const NUC_TYPE = {
 
 export const NUC_TYPE_OPTIONS = Object.entries(NUC_TYPE).map(([value, item]) => ({ value, label: item.label }));
 
+export const DRONE_STATUS = {
+  disponible: { label: "Disponible", className: "bg-[hsl(150_40%_93%)] text-[hsl(155_45%_26%)]" },
+  colectado: { label: "Colectado", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },
+  descartado: { label: "Descartado", className: "bg-[hsl(4_70%_95%)] text-[hsl(4_65%_40%)]" },
+};
+
+export const DRONE_STATUS_OPTIONS = Object.entries(DRONE_STATUS).map(([value, item]) => ({
+  value,
+  label: item.label,
+}));
+
 export const HIVE_STATUS = {
   activa: { label: "Activa", className: "bg-[hsl(150_40%_93%)] text-[hsl(155_45%_26%)]" },
   en_revision: { label: "En revisión", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },
