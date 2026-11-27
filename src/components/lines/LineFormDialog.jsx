@@ -5,6 +5,7 @@ import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Field from "@/components/common/Field";
 import FormDialog from "@/components/common/FormDialog";
@@ -26,7 +27,30 @@ const SCORE_OPTIONS = ["1", "2", "3", "4", "5"];
 
 export default function LineFormDialog({ open, onOpenChange, line }) {
   const [form, setForm] = useState(EMPTY);
+  const [places, setPlaces] = useState([]);
+  const [customOrigin, setCustomOrigin] = useState(false);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!open) return undefined;
+    setCustomOrigin(false);
+    let alive = true;
+    Promise.all([
+      base44.entities.BreedingLine.list({ limit: 200 }),
+      base44.entities.Hive.list({ limit: 200 }),
+    ])
+      .then(([lines, hives]) => {
+        if (!alive) return;
+        const bag = new Set();
+        lines.items.forEach((item) => item.origin && bag.add(item.origin.trim()));
+        hives.items.forEach((item) => item.location && bag.add(item.location.trim()));
+        setPlaces([...bag].sort((a, b) => a.localeCompare(b, "es")));
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [open]);
 
   useEffect(() => {
     if (open) {
@@ -99,6 +123,8 @@ export default function LineFormDialog({ open, onOpenChange, line }) {
     </Field>
   );
 
+  const originOptions = [...new Set([...places, line?.origin, form.origin].filter(Boolean))];
+
   return (
     <FormDialog
       open={open}
@@ -115,8 +141,44 @@ export default function LineFormDialog({ open, onOpenChange, line }) {
         <Field label="Código">
           <Input value={form.code} onChange={(e) => set("code", e.target.value)} placeholder="L-04" />
         </Field>
-        <Field label="Origen" className="sm:col-span-2">
-          <Input value={form.origin} onChange={(e) => set("origin", e.target.value)} placeholder="Selección 2024" />
+        <Field label="Origen – lugar" className="sm:col-span-2">
+          {customOrigin ? (
+            <div className="flex gap-2">
+              <Input
+                autoFocus
+                value={form.origin}
+                onChange={(e) => set("origin", e.target.value)}
+                placeholder="Lugar de origen de la línea"
+              />
+              <Button type="button" variant="outline" onClick={() => setCustomOrigin(false)}>
+                Lista
+              </Button>
+            </div>
+          ) : (
+            <Select
+              value={form.origin || undefined}
+              onValueChange={(value) => {
+                if (value === "__otro") {
+                  setCustomOrigin(true);
+                  set("origin", "");
+                  return;
+                }
+                set("origin", value);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecciona el origen o lugar" />
+              </SelectTrigger>
+              <SelectContent>
+                {originOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+                <SelectItem value="__otro">Otro lugar…</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
         </Field>
         {score("gentleness", "Docilidad")}
         {score("productivity", "Producción de miel")}
