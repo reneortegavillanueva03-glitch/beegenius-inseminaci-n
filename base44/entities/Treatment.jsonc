@@ -1,0 +1,121 @@
+{
+  "type": "object",
+  "name": "Treatment",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo del tratamiento, por ejemplo APN-T-01"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "varroa",
+        "nosema",
+        "loque",
+        "alimentacion",
+        "otro"
+      ],
+      "enumColors": [
+        "red",
+        "purple",
+        "yellow",
+        "green",
+        "gray"
+      ],
+      "default": "varroa"
+    },
+    "product": {
+      "type": "string",
+      "description": "Producto aplicado"
+    },
+    "dose": {
+      "type": "string",
+      "description": "Dosis aplicada, por ejemplo 3 ml por colmena"
+    },
+    "target": {
+      "type": "string",
+      "description": "Colmena o n\u00facleo tratado"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de aplicaci\u00f3n"
+    },
+    "nextDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de la pr\u00f3xima aplicaci\u00f3n"
+    },
+    "withdrawalDays": {
+      "type": "number",
+      "description": "D\u00edas de carencia antes de cosechar miel"
+    },
+    "responsible": {
+      "type": "string",
+      "description": "Responsable de la aplicaci\u00f3n"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "programado",
+        "aplicado",
+        "completado",
+        "suspendido"
+      ],
+      "enumColors": [
+        "yellow",
+        "blue",
+        "green",
+        "red"
+      ],
+      "default": "programado"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "code"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

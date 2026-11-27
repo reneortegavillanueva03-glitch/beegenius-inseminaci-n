@@ -121,6 +121,31 @@ export const COLONY = {
 
 export const COLONY_OPTIONS = Object.entries(COLONY).map(([value, item]) => ({ value, label: item.label }));
 
+export const TREATMENT_TYPE = {
+  varroa: { label: "Varroa", className: "bg-[hsl(4_70%_95%)] text-[hsl(4_65%_40%)]" },
+  nosema: { label: "Nosema", className: "bg-[hsl(270_35%_94%)] text-[hsl(270_35%_38%)]" },
+  loque: { label: "Loque", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },
+  alimentacion: { label: "Alimentación", className: "bg-[hsl(150_40%_93%)] text-[hsl(155_45%_26%)]" },
+  otro: { label: "Otro", className: "bg-secondary text-foreground/70" },
+};
+
+export const TREATMENT_TYPE_OPTIONS = Object.entries(TREATMENT_TYPE).map(([value, item]) => ({
+  value,
+  label: item.label,
+}));
+
+export const TREATMENT_STATUS = {
+  programado: { label: "Programado", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },
+  aplicado: { label: "Aplicado", className: "bg-[hsl(203_30%_93%)] text-[hsl(203_35%_32%)]" },
+  completado: { label: "Completado", className: "bg-[hsl(150_40%_93%)] text-[hsl(155_45%_26%)]" },
+  suspendido: { label: "Suspendido", className: "bg-[hsl(4_70%_95%)] text-[hsl(4_65%_40%)]" },
+};
+
+export const TREATMENT_STATUS_OPTIONS = Object.entries(TREATMENT_STATUS).map(([value, item]) => ({
+  value,
+  label: item.label,
+}));
+
 export function fmtDate(value) {
   if (!value) return "—";
   const date = new Date(value);
