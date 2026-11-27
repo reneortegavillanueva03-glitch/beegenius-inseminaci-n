@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Field from "@/components/common/Field";
 import FormDialog from "@/components/common/FormDialog";
 import { HIVE_STATUS_OPTIONS } from "@/lib/labels";
+import { assignmentMessage, queenAssignment } from "@/lib/queenAssignment";
 
 const EMPTY = {
   code: "",
@@ -77,10 +78,15 @@ export default function HiveFormDialog({ open, onOpenChange, hive, queens = [], 
     onError: () => toast.error("No se pudo guardar la colmena"),
   });
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
     if (!form.code.trim()) {
       toast.error("El código de la colmena es obligatorio");
+      return;
+    }
+    const assignment = await queenAssignment(form.queenCode, { hiveId: hive?.id, hiveCode: hive?.code });
+    if (assignment) {
+      toast.error(assignmentMessage(assignment));
       return;
     }
     mutation.mutate({

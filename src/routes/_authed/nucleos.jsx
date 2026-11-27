@@ -39,6 +39,14 @@ function NucsPage() {
     },
   });
 
+  const { data: lines = [] } = useQuery({
+    queryKey: ["lines"],
+    queryFn: async () => {
+      const page = await base44.entities.BreedingLine.list({ sort: "name", limit: 100 });
+      return page.items;
+    },
+  });
+
   const remove = useMutation({
     mutationFn: (id) => base44.entities.MatingNuc.delete(id),
     onSuccess: () => {
@@ -123,6 +131,11 @@ function NucsPage() {
               <div className="mt-3 flex flex-wrap items-center gap-1.5">
                 <StatusBadge value={nuc.status} map={NUC_STATUS} />
                 <StatusBadge value={nuc.type} map={NUC_TYPE} />
+                {nuc.line && (
+                  <span className="rounded-md bg-secondary px-2 py-0.5 text-[11px] font-medium text-foreground/70">
+                    {nuc.line}
+                  </span>
+                )}
               </div>
 
               <div className="mt-4 flex items-center justify-between border-t pt-3 text-[11.5px]">
@@ -132,6 +145,16 @@ function NucsPage() {
               <div className="mt-1.5 flex items-center justify-between text-[11.5px]">
                 <span className="text-muted-foreground">Instalación</span>
                 <span className="text-foreground/80">{fmtDate(nuc.installedDate)}</span>
+              </div>
+              <div className="mt-1.5 flex items-center justify-between text-[11.5px]">
+                <span className="text-muted-foreground">Miel</span>
+                <span className="num font-medium text-foreground">
+                  {nuc.honeyKg == null ? "—" : `${nuc.honeyKg} kg`}
+                </span>
+              </div>
+              <div className="mt-1.5 flex items-center justify-between text-[11.5px]">
+                <span className="text-muted-foreground">Última revisión</span>
+                <span className="text-foreground/80">{fmtDate(nuc.lastRevision)}</span>
               </div>
             </div>
           ))}
@@ -147,7 +170,13 @@ function NucsPage() {
         onConfirm={() => remove.mutate(deleting.id)}
       />
 
-      <NucFormDialog open={dialogOpen} onOpenChange={setDialogOpen} nuc={editing} queens={queens} />
+      <NucFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        nuc={editing}
+        queens={queens}
+        lines={lines}
+      />
     </>
   );
 }

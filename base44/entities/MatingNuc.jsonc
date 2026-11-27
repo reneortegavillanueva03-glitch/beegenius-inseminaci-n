@@ -43,7 +43,19 @@
     "queenCode": {
       "type": "string"
     },
+    "line": {
+      "type": "string",
+      "description": "L\u00ednea de cr\u00eda"
+    },
+    "honeyKg": {
+      "type": "number",
+      "description": "Producci\u00f3n de miel acumulada en kg"
+    },
     "installedDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "lastRevision": {
       "type": "string",
       "format": "date"
     },

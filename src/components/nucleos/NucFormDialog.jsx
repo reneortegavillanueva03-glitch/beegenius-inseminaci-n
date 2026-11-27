@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Field from "@/components/common/Field";
 import FormDialog from "@/components/common/FormDialog";
 import { NUC_STATUS_OPTIONS, NUC_TYPE_OPTIONS } from "@/lib/labels";
+import { assignmentMessage, queenAssignment } from "@/lib/queenAssignment";
 
 const EMPTY = {
   number: "",
@@ -15,11 +16,14 @@ const EMPTY = {
   type: "fecundacion",
   status: "libre",
   queenCode: "",
+  line: "",
+  honeyKg: "",
   installedDate: "",
+  lastRevision: "",
   notes: "",
 };
 
-export default function NucFormDialog({ open, onOpenChange, nuc, queens = [] }) {
+export default function NucFormDialog({ open, onOpenChange, nuc, queens = [], lines = [] }) {
   const [form, setForm] = useState(EMPTY);
   const queryClient = useQueryClient();
 
@@ -33,7 +37,10 @@ export default function NucFormDialog({ open, onOpenChange, nuc, queens = [] }) 
               type: nuc.type ?? "fecundacion",
               status: nuc.status ?? "libre",
               queenCode: nuc.queenCode ?? "",
+              line: nuc.line ?? "",
+              honeyKg: nuc.honeyKg ?? "",
               installedDate: nuc.installedDate ?? "",
+              lastRevision: nuc.lastRevision ?? "",
               notes: nuc.notes ?? "",
             }
           : EMPTY
@@ -73,13 +80,22 @@ export default function NucFormDialog({ open, onOpenChange, nuc, queens = [] }) 
     onError: () => toast.error("No se pudo guardar el núcleo"),
   });
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
     if (!form.number.trim()) {
       toast.error("El número del núcleo es obligatorio");
       return;
     }
-    mutation.mutate({ ...form, number: form.number.trim() });
+    const assignment = await queenAssignment(form.queenCode, { nucId: nuc?.id, nucCode: nuc?.number });
+    if (assignment) {
+      toast.error(assignmentMessage(assignment));
+      return;
+    }
+    mutation.mutate({
+      ...form,
+      number: form.number.trim(),
+      honeyKg: form.honeyKg === "" ? null : Number(form.honeyKg),
+    });
   };
 
   return (
@@ -95,7 +111,7 @@ export default function NucFormDialog({ open, onOpenChange, nuc, queens = [] }) 
         <Field label="Número *">
           <Input value={form.number} onChange={(e) => set("number", e.target.value)} placeholder="APN-N-12" />
         </Field>
-        <Field label="Lugar">
+        <Field label="Ubicación">
           <Select value={form.location || "none"} onValueChange={(v) => set("location", v === "none" ? "" : v)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecciona un lugar" />
@@ -156,8 +172,36 @@ export default function NucFormDialog({ open, onOpenChange, nuc, queens = [] }) 
             </SelectContent>
           </Select>
         </Field>
+        <Field label="Línea">
+          <Select value={form.line || "none"} onValueChange={(v) => set("line", v === "none" ? "" : v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Sin línea" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Sin línea</SelectItem>
+              {lines.map((line) => (
+                <SelectItem key={line.id} value={line.name}>
+                  {line.code ? `${line.code} · ${line.name}` : line.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Field>
+        <Field label="Miel acumulada (kg)">
+          <Input
+            type="number"
+            step="0.1"
+            min="0"
+            value={form.honeyKg}
+            onChange={(e) => set("honeyKg", e.target.value)}
+            placeholder="0"
+          />
+        </Field>
         <Field label="Instalación">
           <Input type="date" value={form.installedDate} onChange={(e) => set("installedDate", e.target.value)} />
+        </Field>
+        <Field label="Última revisión">
+          <Input type="date" value={form.lastRevision} onChange={(e) => set("lastRevision", e.target.value)} />
         </Field>
       </div>
       <Field label="Notas">
