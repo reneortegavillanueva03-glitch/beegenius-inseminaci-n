@@ -164,6 +164,7 @@ function QueenDetailPage() {
             <DataItem label="Apiario" value={queen.apiary} />
             <DataItem label="Reina madre" value={queen.motherCode} />
             <DataItem label="Núcleo" value={queen.nucCode} />
+            <DataItem label="Colmena" value={queen.hiveCode} />
             <DataItem label="Fecha de nacimiento" value={fmtDate(queen.emergenceDate)} />
             <DataItem label="Inicio de postura" value={fmtDate(queen.layingDate)} />
             <DataItem label="Estado" value={QUEEN_STATUS[queen.status]?.label} />

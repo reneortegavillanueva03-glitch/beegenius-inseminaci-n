@@ -55,6 +55,10 @@
       "type": "string",
       "description": "N\u00facleo asignado"
     },
+    "hiveCode": {
+      "type": "string",
+      "description": "Colmena asignada"
+    },
     "inseminationDate": {
       "type": "string",
       "format": "date"
