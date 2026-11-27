@@ -43,8 +43,8 @@ export default function InviteUserDialog({ open, onOpenChange }) {
     <FormDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Invitar usuario"
-      description="La persona recibirá un correo para unirse al sistema."
+      title="Nuevo usuario"
+      description="Escribe su correo y rol: recibirá una invitación para crear su cuenta y acceder al sistema."
       onSubmit={submit}
       submitting={mutation.isPending}
       submitLabel="Enviar invitación"

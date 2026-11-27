@@ -56,7 +56,7 @@ function UsersPage() {
             }}
           >
             <Plus className="mr-1.5 h-4 w-4" />
-            Invitar usuario
+            Nuevo usuario
           </Button>
         }
       />
@@ -74,9 +74,14 @@ function UsersPage() {
             title="Todavía no hay usuarios"
             description="Invita a las personas que trabajarán en el apiario para asignarlas como responsables."
             action={
-              <Button onClick={() => setDialogOpen(true)}>
+              <Button
+                onClick={() => {
+                  setEditing(null);
+                  setDialogOpen(true);
+                }}
+              >
                 <Plus className="mr-1.5 h-4 w-4" />
-                Invitar usuario
+                Nuevo usuario
               </Button>
             }
           />
@@ -95,20 +100,22 @@ function UsersPage() {
               <Badge variant="secondary" className="shrink-0 text-[10.5px] uppercase tracking-wide">
                 {item.role === "admin" ? "Administrador" : "Usuario"}
               </Badge>
-              <div className="flex shrink-0 items-center gap-1">
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(item)}>
-                  <Pencil className="h-3.5 w-3.5" />
+              <div className="flex shrink-0 items-center gap-1.5">
+                <Button variant="outline" size="sm" className="h-8" onClick={() => openEdit(item)}>
+                  <Pencil className="mr-1.5 h-3.5 w-3.5" />
+                  Editar
                 </Button>
-                {item.id !== me?.id && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-muted-foreground"
-                    onClick={() => setDeleting(item)}
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
-                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 text-muted-foreground"
+                  disabled={item.id === me?.id}
+                  title={item.id === me?.id ? "No puedes eliminar tu propia cuenta" : "Eliminar usuario"}
+                  onClick={() => setDeleting(item)}
+                >
+                  <Trash2 className="mr-1.5 h-3.5 w-3.5" />
+                  Eliminar
+                </Button>
               </div>
             </div>
           ))}
