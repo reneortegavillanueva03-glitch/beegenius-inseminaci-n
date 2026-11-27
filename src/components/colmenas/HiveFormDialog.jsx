@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
@@ -47,6 +47,25 @@ export default function HiveFormDialog({ open, onOpenChange, hive, queens = [], 
 
   const set = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
+  const { data: places = [] } = useQuery({
+    queryKey: ["places"],
+    queryFn: async () => {
+      const page = await base44.entities.Place.list({ sort: "name", limit: 300 });
+      return page.items;
+    },
+  });
+
+  const placeOptions = useMemo(() => {
+    const options = places.map((place) => ({
+      value: place.name,
+      label: place.code ? `${place.code} · ${place.name}` : place.name,
+    }));
+    if (form.location && !options.some((option) => option.value === form.location)) {
+      options.unshift({ value: form.location, label: form.location });
+    }
+    return options;
+  }, [places, form.location]);
+
   const mutation = useMutation({
     mutationFn: (payload) =>
       hive ? base44.entities.Hive.update(hive.id, payload) : base44.entities.Hive.create(payload),
@@ -85,7 +104,19 @@ export default function HiveFormDialog({ open, onOpenChange, hive, queens = [], 
           <Input value={form.code} onChange={(e) => set("code", e.target.value)} placeholder="APN-C-07" />
         </Field>
         <Field label="Ubicación">
-          <Input value={form.location} onChange={(e) => set("location", e.target.value)} placeholder="Fila 3" />
+          <Select value={form.location || "none"} onValueChange={(v) => set("location", v === "none" ? "" : v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona un lugar" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Sin lugar</SelectItem>
+              {placeOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </Field>
         <Field label="Estado">
           <Select value={form.status} onValueChange={(v) => set("status", v)}>
