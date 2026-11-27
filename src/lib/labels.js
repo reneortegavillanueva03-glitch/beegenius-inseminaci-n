@@ -36,6 +36,19 @@ export const NUC_TYPE = {
 
 export const NUC_TYPE_OPTIONS = Object.entries(NUC_TYPE).map(([value, item]) => ({ value, label: item.label }));
 
+export const HIVE_STATUS = {
+  activa: { label: "Activa", className: "bg-[hsl(150_40%_93%)] text-[hsl(155_45%_26%)]" },
+  en_revision: { label: "En revisión", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },
+  debil: { label: "Débil", className: "bg-[hsl(4_70%_95%)] text-[hsl(4_65%_40%)]" },
+  sin_reina: { label: "Sin reina", className: "bg-[hsl(270_35%_94%)] text-[hsl(270_35%_38%)]" },
+  descartada: { label: "Descartada", className: "bg-secondary text-foreground/70" },
+};
+
+export const HIVE_STATUS_OPTIONS = Object.entries(HIVE_STATUS).map(([value, item]) => ({
+  value,
+  label: item.label,
+}));
+
 export const LAYING = {
   sin_postura: { label: "Sin postura", className: "bg-secondary text-foreground/70" },
   postura_inicial: { label: "Postura inicial", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },

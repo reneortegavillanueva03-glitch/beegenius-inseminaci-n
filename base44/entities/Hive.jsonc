@@ -1,0 +1,99 @@
+{
+  "type": "object",
+  "name": "Hive",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo o n\u00famero de la colmena, por ejemplo C-07"
+    },
+    "location": {
+      "type": "string",
+      "description": "Ubicaci\u00f3n en el apiario"
+    },
+    "line": {
+      "type": "string",
+      "description": "L\u00ednea de cr\u00eda de la reina"
+    },
+    "queenCode": {
+      "type": "string",
+      "description": "Reina instalada"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "activa",
+        "en_revision",
+        "debil",
+        "sin_reina",
+        "descartada"
+      ],
+      "enumColors": [
+        "green",
+        "yellow",
+        "red",
+        "purple",
+        "gray"
+      ],
+      "default": "activa"
+    },
+    "honeyKg": {
+      "type": "number",
+      "description": "Producci\u00f3n de miel acumulada en kg"
+    },
+    "installedDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "lastRevision": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "code"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
