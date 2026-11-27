@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,16 @@ export default function TaskFormDialog({ open, onOpenChange }) {
   useEffect(() => {
     if (open) setForm(EMPTY);
   }, [open]);
+
+  const { data: queens = [] } = useQuery({
+    queryKey: ["queens-options"],
+    queryFn: async () => {
+      const page = await base44.entities.Queen.filter({}, { sort: "-created_date", limit: 300 });
+      return page.items;
+    },
+    enabled: open,
+    staleTime: 0,
+  });
 
   const set = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
@@ -75,12 +85,27 @@ export default function TaskFormDialog({ open, onOpenChange }) {
         <Field label="Fecha">
           <Input type="date" value={form.dueDate} onChange={(e) => set("dueDate", e.target.value)} />
         </Field>
-        <Field label="Reina relacionada" className="sm:col-span-2">
-          <Input
-            value={form.queenCode}
-            onChange={(e) => set("queenCode", e.target.value)}
-            placeholder="APN-R-26-118"
-          />
+        <Field label="Reina relacionada" className="sm:col-span-2" hint="Selecciona una reina registrada en el programa.">
+          <Select
+            value={form.queenCode || "none"}
+            onValueChange={(v) => set("queenCode", v === "none" ? "" : v)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona una reina" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Sin reina asignada</SelectItem>
+              {queens.map((queen) => (
+                <SelectItem key={queen.id} value={queen.code}>
+                  {queen.code}
+                  {queen.line ? ` · ${queen.line}` : ""}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {queens.length === 0 && (
+            <p className="mt-1.5 text-[11.5px] text-muted-foreground">Aún no hay reinas registradas.</p>
+          )}
         </Field>
       </div>
       <Field label="Notas">
