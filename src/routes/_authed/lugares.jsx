@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { MapPin, Pencil, Plus } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { MapPin, Pencil, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/layout/PageHeader";
 import EmptyState from "@/components/common/EmptyState";
+import DeleteConfirmDialog from "@/components/common/DeleteConfirmDialog";
 import PlaceFormDialog from "@/components/lugares/PlaceFormDialog";
 import { Button } from "@/components/ui/button";
 
@@ -16,6 +18,8 @@ export const Route = createFileRoute("/_authed/lugares")({
 function PlacesPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [deleting, setDeleting] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: places = [], isLoading } = useQuery({
     queryKey: ["places"],
@@ -23,6 +27,16 @@ function PlacesPage() {
       const page = await base44.entities.Place.list({ sort: "name", limit: 300 });
       return page.items;
     },
+  });
+
+  const remove = useMutation({
+    mutationFn: (id) => base44.entities.Place.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["places"] });
+      toast.success("Lugar eliminado");
+      setDeleting(null);
+    },
+    onError: () => toast.error("No se pudo eliminar el lugar"),
   });
 
   const openNew = () => {
@@ -81,9 +95,19 @@ function PlacesPage() {
                     {place.name}
                   </p>
                 </div>
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(place)}>
-                  <Pencil className="h-3.5 w-3.5" />
-                </Button>
+                <div className="flex items-center gap-1">
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(place)}>
+                    <Pencil className="h-3.5 w-3.5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-muted-foreground"
+                    onClick={() => setDeleting(place)}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
               </div>
               {place.notes && (
                 <p className="mt-3 border-t pt-3 text-[11.5px] text-muted-foreground">{place.notes}</p>
@@ -92,6 +116,15 @@ function PlacesPage() {
           ))}
         </div>
       )}
+
+      <DeleteConfirmDialog
+        open={!!deleting}
+        onOpenChange={(value) => !value && setDeleting(null)}
+        title={`¿Eliminar el lugar ${deleting?.code ?? ""}?`}
+        description="Se eliminará el lugar del apiario. Los núcleos y apiarios registrados no cambian."
+        busy={remove.isPending}
+        onConfirm={() => remove.mutate(deleting.id)}
+      />
 
       <PlaceFormDialog open={dialogOpen} onOpenChange={setDialogOpen} place={editing} />
     </>

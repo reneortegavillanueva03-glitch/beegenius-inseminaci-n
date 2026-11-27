@@ -11,13 +11,24 @@ import { TASK_TYPE_OPTIONS } from "@/lib/labels";
 
 const EMPTY = { title: "", type: "revision", dueDate: "", queenCode: "", notes: "" };
 
-export default function TaskFormDialog({ open, onOpenChange }) {
+export default function TaskFormDialog({ open, onOpenChange, task }) {
   const [form, setForm] = useState(EMPTY);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (open) setForm(EMPTY);
-  }, [open]);
+    if (!open) return;
+    setForm(
+      task
+        ? {
+            title: task.title ?? "",
+            type: task.type ?? "revision",
+            dueDate: task.dueDate ?? "",
+            queenCode: task.queenCode ?? "",
+            notes: task.notes ?? "",
+          }
+        : EMPTY
+    );
+  }, [open, task]);
 
   const { data: queens = [] } = useQuery({
     queryKey: ["queens-options"],
@@ -32,13 +43,14 @@ export default function TaskFormDialog({ open, onOpenChange }) {
   const set = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const mutation = useMutation({
-    mutationFn: (payload) => base44.entities.Task.create(payload),
+    mutationFn: (payload) =>
+      task ? base44.entities.Task.update(task.id, payload) : base44.entities.Task.create(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      toast.success("Tarea creada");
+      toast.success(task ? "Tarea actualizada" : "Tarea creada");
       onOpenChange(false);
     },
-    onError: () => toast.error("No se pudo crear la tarea"),
+    onError: () => toast.error(task ? "No se pudo actualizar la tarea" : "No se pudo crear la tarea"),
   });
 
   const submit = (event) => {
@@ -47,18 +59,18 @@ export default function TaskFormDialog({ open, onOpenChange }) {
       toast.error("Escribe un título para la tarea");
       return;
     }
-    mutation.mutate({ ...form, title: form.title.trim(), done: false });
+    mutation.mutate({ ...form, title: form.title.trim(), ...(task ? {} : { done: false }) });
   };
 
   return (
     <FormDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Nueva tarea"
+      title={task ? "Editar tarea" : "Nueva tarea"}
       description="Revisiones, inseminaciones programadas y trabajo de campo."
       onSubmit={submit}
       submitting={mutation.isPending}
-      submitLabel="Crear tarea"
+      submitLabel={task ? "Guardar" : "Crear tarea"}
     >
       <Field label="Título *">
         <Input

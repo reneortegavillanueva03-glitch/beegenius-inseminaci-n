@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, Circle, ListChecks, Plus, Trash2 } from "lucide-react";
+import { CheckCircle2, Circle, ListChecks, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/layout/PageHeader";
@@ -18,7 +18,18 @@ export const Route = createFileRoute("/_authed/tareas")({
 
 function TasksPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
   const queryClient = useQueryClient();
+
+  const openNew = () => {
+    setEditing(null);
+    setDialogOpen(true);
+  };
+
+  const openEdit = (task) => {
+    setEditing(task);
+    setDialogOpen(true);
+  };
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
@@ -68,6 +79,13 @@ function TasksPage() {
       <div className="flex shrink-0 items-center gap-2">
         <span className="text-[11.5px] text-muted-foreground">{fmtDate(task.dueDate)}</span>
         <button
+          onClick={() => openEdit(task)}
+          className="text-muted-foreground/60 transition-colors hover:text-foreground"
+          aria-label="Editar tarea"
+        >
+          <Pencil className="h-3.5 w-3.5" />
+        </button>
+        <button
           onClick={() => remove.mutate(task.id)}
           className="text-muted-foreground/60 transition-colors hover:text-destructive"
           aria-label="Eliminar tarea"
@@ -85,7 +103,7 @@ function TasksPage() {
         title="Tareas"
         description="Revisiones, inseminaciones programadas y trabajo de campo del apiario."
         actions={
-          <Button onClick={() => setDialogOpen(true)}>
+          <Button onClick={openNew}>
             <Plus className="mr-1.5 h-4 w-4" />
             Nueva tarea
           </Button>
@@ -105,7 +123,7 @@ function TasksPage() {
             title="No hay tareas programadas"
             description="Crea revisiones a 3, 7 y 14 días después de cada inseminación para confirmar la postura."
             action={
-              <Button onClick={() => setDialogOpen(true)}>
+              <Button onClick={openNew}>
                 <Plus className="mr-1.5 h-4 w-4" />
                 Nueva tarea
               </Button>
@@ -138,7 +156,7 @@ function TasksPage() {
         </div>
       )}
 
-      <TaskFormDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+      <TaskFormDialog open={dialogOpen} onOpenChange={setDialogOpen} task={editing} />
     </>
   );
 }

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Hexagon, Plus } from "lucide-react";
+import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/layout/PageHeader";
 import EmptyState from "@/components/common/EmptyState";
+import DeleteConfirmDialog from "@/components/common/DeleteConfirmDialog";
 import LineCard from "@/components/lines/LineCard";
 import LineFormDialog from "@/components/lines/LineFormDialog";
 import { Button } from "@/components/ui/button";
@@ -17,6 +19,8 @@ export const Route = createFileRoute("/_authed/lineas")({
 function LinesPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [deleting, setDeleting] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: lines = [], isLoading } = useQuery({
     queryKey: ["lines"],
@@ -24,6 +28,16 @@ function LinesPage() {
       const page = await base44.entities.BreedingLine.list({ sort: "name", limit: 100 });
       return page.items;
     },
+  });
+
+  const remove = useMutation({
+    mutationFn: (id) => base44.entities.BreedingLine.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["lines"] });
+      toast.success("Línea eliminada");
+      setDeleting(null);
+    },
+    onError: () => toast.error("No se pudo eliminar la línea"),
   });
 
   const openNew = () => {
@@ -73,10 +87,19 @@ function LinesPage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {lines.map((line) => (
-            <LineCard key={line.id} line={line} onEdit={openEdit} />
+            <LineCard key={line.id} line={line} onEdit={openEdit} onDelete={setDeleting} />
           ))}
         </div>
       )}
+
+      <DeleteConfirmDialog
+        open={!!deleting}
+        onOpenChange={(value) => !value && setDeleting(null)}
+        title={`¿Eliminar la línea ${deleting?.name ?? ""}?`}
+        description="Se eliminará la línea de cría. Las reinas que la usan mantienen su registro."
+        busy={remove.isPending}
+        onConfirm={() => remove.mutate(deleting.id)}
+      />
 
       <LineFormDialog open={dialogOpen} onOpenChange={setDialogOpen} line={editing} />
     </>

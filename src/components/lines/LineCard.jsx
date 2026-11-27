@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Pencil, Crown } from "lucide-react";
+import { Pencil, Crown, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TRAITS = [
@@ -9,7 +9,7 @@ const TRAITS = [
   { key: "varroa", label: "Varroa" },
 ];
 
-export default function LineCard({ line, onEdit }) {
+export default function LineCard({ line, onEdit, onDelete }) {
   return (
     <div className="panel flex flex-col p-5">
       <div className="flex items-start justify-between gap-3">
@@ -27,9 +27,19 @@ export default function LineCard({ line, onEdit }) {
           <h3 className="mt-2 truncate font-heading text-[15px] font-bold tracking-tight">{line.name}</h3>
           <p className="mt-0.5 truncate text-[11.5px] text-muted-foreground">{line.origin || "Sin origen registrado"}</p>
         </div>
-        <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => onEdit(line)}>
-          <Pencil className="h-3.5 w-3.5" />
-        </Button>
+        <div className="flex shrink-0 items-center gap-1">
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(line)}>
+            <Pencil className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground"
+            onClick={() => onDelete(line)}
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
+        </div>
       </div>
 
       <div className="mt-4 space-y-2.5">

@@ -26,18 +26,38 @@ const EMPTY = {
   notes: "",
 };
 
-export default function InseminationFormDialog({ open, onOpenChange, queens = [] }) {
+export default function InseminationFormDialog({ open, onOpenChange, queens = [], insemination }) {
   const [form, setForm] = useState(EMPTY);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (open) setForm(EMPTY);
-  }, [open]);
+    if (!open) return;
+    setForm(
+      insemination
+        ? {
+            queenId: insemination.queenId ?? "",
+            date: insemination.date ?? "",
+            droneLine: insemination.droneLine ?? "",
+            droneOrigin: insemination.droneOrigin ?? "",
+            droneCount: insemination.droneCount ?? "",
+            semenVolume: insemination.semenVolume ?? "",
+            co2Minutes: insemination.co2Minutes ?? "",
+            technician: insemination.technician ?? "",
+            result: insemination.result ?? "pendiente",
+            notes: insemination.notes ?? "",
+          }
+        : EMPTY
+    );
+  }, [open, insemination]);
 
   const set = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const mutation = useMutation({
     mutationFn: async (payload) => {
+      if (insemination) {
+        await base44.entities.Insemination.update(insemination.id, payload);
+        return;
+      }
       await base44.entities.Insemination.create(payload);
       if (payload.queenId) {
         await base44.entities.Queen.update(payload.queenId, {
@@ -49,10 +69,10 @@ export default function InseminationFormDialog({ open, onOpenChange, queens = []
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["inseminations"] });
       queryClient.invalidateQueries({ queryKey: ["queens"] });
-      toast.success("Inseminación registrada");
+      toast.success(insemination ? "Inseminación actualizada" : "Inseminación registrada");
       onOpenChange(false);
     },
-    onError: () => toast.error("No se pudo registrar la inseminación"),
+    onError: () => toast.error(insemination ? "No se pudo actualizar la inseminación" : "No se pudo registrar la inseminación"),
   });
 
   const submit = (event) => {
@@ -82,11 +102,11 @@ export default function InseminationFormDialog({ open, onOpenChange, queens = []
     <FormDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Registrar inseminación"
+      title={insemination ? "Editar inseminación" : "Registrar inseminación"}
       description="La reina pasa automáticamente a estado inseminada o en postura."
       onSubmit={submit}
       submitting={mutation.isPending}
-      submitLabel="Registrar"
+      submitLabel={insemination ? "Guardar" : "Registrar"}
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Reina *" className="sm:col-span-2">

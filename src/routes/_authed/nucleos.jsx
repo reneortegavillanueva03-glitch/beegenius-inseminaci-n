@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { Boxes, MapPin, Pencil, Plus } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Boxes, MapPin, Pencil, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/layout/PageHeader";
 import StatusBadge from "@/components/common/StatusBadge";
 import EmptyState from "@/components/common/EmptyState";
+import DeleteConfirmDialog from "@/components/common/DeleteConfirmDialog";
 import NucFormDialog from "@/components/nucleos/NucFormDialog";
 import { Button } from "@/components/ui/button";
 import { NUC_STATUS, NUC_TYPE, fmtDate } from "@/lib/labels";
@@ -18,6 +20,8 @@ export const Route = createFileRoute("/_authed/nucleos")({
 function NucsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [deleting, setDeleting] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: nucs = [], isLoading } = useQuery({
     queryKey: ["nucs"],
@@ -33,6 +37,16 @@ function NucsPage() {
       const page = await base44.entities.Queen.filter({}, { sort: "-created_date", limit: 200 });
       return page.items;
     },
+  });
+
+  const remove = useMutation({
+    mutationFn: (id) => base44.entities.MatingNuc.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["nucs"] });
+      toast.success("Núcleo eliminado");
+      setDeleting(null);
+    },
+    onError: () => toast.error("No se pudo eliminar el núcleo"),
   });
 
   const openNew = () => {
@@ -91,9 +105,19 @@ function NucsPage() {
                     {nuc.location || "Sin lugar"}
                   </p>
                 </div>
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(nuc)}>
-                  <Pencil className="h-3.5 w-3.5" />
-                </Button>
+                <div className="flex items-center gap-1">
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(nuc)}>
+                    <Pencil className="h-3.5 w-3.5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-muted-foreground"
+                    onClick={() => setDeleting(nuc)}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
               </div>
 
               <div className="mt-3 flex flex-wrap items-center gap-1.5">
@@ -113,6 +137,15 @@ function NucsPage() {
           ))}
         </div>
       )}
+
+      <DeleteConfirmDialog
+        open={!!deleting}
+        onOpenChange={(value) => !value && setDeleting(null)}
+        title={`¿Eliminar el núcleo ${deleting?.number ?? ""}?`}
+        description="Se eliminará el núcleo. Las reinas e inseminaciones registradas no cambian."
+        busy={remove.isPending}
+        onConfirm={() => remove.mutate(deleting.id)}
+      />
 
       <NucFormDialog open={dialogOpen} onOpenChange={setDialogOpen} nuc={editing} queens={queens} />
     </>
