@@ -159,8 +159,8 @@ function QueenDetailPage() {
         <div className="panel p-5 lg:col-span-2">
           <h2 className="font-heading text-[15px] font-bold tracking-tight">Datos de la reina</h2>
           <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
-            <DataItem label="Fecha de nacimiento" value={fmtDate(queen.emergenceDate)} />
             <DataItem label="Fecha de traslarve" value={fmtDate(queen.graftDate)} />
+            <DataItem label="Fecha de nacimiento" value={fmtDate(queen.emergenceDate)} />
             <DataItem label="Apiario" value={queen.apiary} />
             <DataItem label="Reina madre" value={queen.motherCode} />
             <DataItem label="Núcleo" value={queen.nucCode} />
