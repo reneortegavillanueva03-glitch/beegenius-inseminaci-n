@@ -1,0 +1,101 @@
+{
+  "type": "object",
+  "name": "Queen",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo \u00fanico de la reina, por ejemplo R-26-118"
+    },
+    "line": {
+      "type": "string",
+      "description": "L\u00ednea de cr\u00eda"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "virgen",
+        "inseminada",
+        "en_postura",
+        "retenida",
+        "descartada"
+      ],
+      "enumColors": [
+        "gray",
+        "yellow",
+        "green",
+        "blue",
+        "red"
+      ],
+      "default": "virgen"
+    },
+    "emergenceDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de nacimiento"
+    },
+    "motherCode": {
+      "type": "string",
+      "description": "Reina madre"
+    },
+    "nucCode": {
+      "type": "string",
+      "description": "N\u00facleo asignado"
+    },
+    "inseminationDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "layingDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Inicio de postura"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "code"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

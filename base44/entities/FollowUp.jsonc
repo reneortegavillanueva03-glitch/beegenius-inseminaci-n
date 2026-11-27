@@ -1,0 +1,90 @@
+{
+  "type": "object",
+  "name": "FollowUp",
+  "properties": {
+    "queenId": {
+      "type": "string"
+    },
+    "queenCode": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "day": {
+      "type": "number",
+      "description": "D\u00eda de revisi\u00f3n tras la inseminaci\u00f3n"
+    },
+    "accepted": {
+      "type": "boolean",
+      "description": "La reina fue aceptada por la colonia"
+    },
+    "laying": {
+      "type": "string",
+      "enum": [
+        "sin_postura",
+        "postura_inicial",
+        "postura_consolidada"
+      ],
+      "enumColors": [
+        "gray",
+        "yellow",
+        "green"
+      ],
+      "default": "sin_postura"
+    },
+    "eggs": {
+      "type": "number",
+      "description": "Celdas con huevos observadas"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "queenCode",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "type": "object",
+  "name": "Insemination",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "queenId": {
+      "type": "string"
+    },
+    "queenCode": {
+      "type": "string"
+    },
+    "line": {
+      "type": "string",
+      "description": "L\u00ednea de la reina"
+    },
+    "droneLine": {
+      "type": "string",
+      "description": "L\u00ednea de los z\u00e1nganos"
+    },
+    "droneOrigin": {
+      "type": "string",
+      "description": "Colonia de origen de los z\u00e1nganos"
+    },
+    "droneCount": {
+      "type": "number"
+    },
+    "semenVolume": {
+      "type": "number",
+      "description": "Volumen de semen en \u00b5l"
+    },
+    "co2Minutes": {
+      "type": "number",
+      "description": "Minutos de anestesia con CO2"
+    },
+    "technician": {
+      "type": "string"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "pendiente",
+        "aceptada",
+        "rechazada"
+      ],
+      "enumColors": [
+        "yellow",
+        "green",
+        "red"
+      ],
+      "default": "pendiente"
+    },
+    "layingDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "date",
+    "queenCode"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "type": "object",
+  "name": "MatingNuc",
+  "properties": {
+    "number": {
+      "type": "string",
+      "description": "N\u00famero o identificaci\u00f3n del n\u00facleo"
+    },
+    "location": {
+      "type": "string",
+      "description": "Ubicaci\u00f3n en el apiario"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "fecundacion",
+        "banco",
+        "cria",
+        "produccion"
+      ],
+      "enumColors": [
+        "blue",
+        "purple",
+        "green",
+        "gray"
+      ],
+      "default": "fecundacion"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "libre",
+        "ocupado",
+        "mantenimiento"
+      ],
+      "enumColors": [
+        "green",
+        "blue",
+        "yellow"
+      ],
+      "default": "libre"
+    },
+    "queenCode": {
+      "type": "string"
+    },
+    "installedDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "number"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

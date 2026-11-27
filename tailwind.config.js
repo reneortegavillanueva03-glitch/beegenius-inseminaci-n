@@ -13,6 +13,10 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+  			honey: {
+  				DEFAULT: 'hsl(var(--honey))',
+  				soft: 'hsl(var(--honey-soft))'
+  			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

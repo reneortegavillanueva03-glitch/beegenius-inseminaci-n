@@ -1,0 +1,85 @@
+{
+  "type": "object",
+  "name": "Task",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "revision",
+        "inseminacion",
+        "traslarve",
+        "alimentacion",
+        "otro"
+      ],
+      "enumColors": [
+        "blue",
+        "yellow",
+        "purple",
+        "green",
+        "gray"
+      ],
+      "default": "revision"
+    },
+    "dueDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "queenCode": {
+      "type": "string"
+    },
+    "done": {
+      "type": "boolean",
+      "default": false
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
