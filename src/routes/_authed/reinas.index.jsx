@@ -41,6 +41,14 @@ function QueensPage() {
     },
   });
 
+  const { data: apiaries = [] } = useQuery({
+    queryKey: ["apiaries"],
+    queryFn: async () => {
+      const page = await base44.entities.Apiary.list({ sort: "code", limit: 300 });
+      return page.items;
+    },
+  });
+
   return (
     <>
       <PageHeader
@@ -105,7 +113,7 @@ function QueensPage() {
             <table className="w-full min-w-[780px] text-left">
               <thead>
                 <tr className="border-b bg-secondary/50">
-                  {["Código", "Línea", "Estado", "Nacimiento", "Núcleo", "Inseminación", "Postura"].map((head) => (
+                  {["Código", "Línea", "Estado", "Nacimiento", "Apiario", "Núcleo", "Inseminación", "Postura"].map((head) => (
                     <th
                       key={head}
                       className="px-5 py-2.5 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
@@ -132,6 +140,7 @@ function QueensPage() {
                       <StatusBadge value={queen.status} map={QUEEN_STATUS} />
                     </td>
                     <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.emergenceDate)}</td>
+                    <td className="px-5 py-3 text-[12.5px] text-foreground/80">{queen.apiary || "—"}</td>
                     <td className="px-5 py-3 text-[12.5px] text-foreground/80">{queen.nucCode || "—"}</td>
                     <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.inseminationDate)}</td>
                     <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.layingDate)}</td>
@@ -143,7 +152,7 @@ function QueensPage() {
         )}
       </div>
 
-      <QueenFormDialog open={dialogOpen} onOpenChange={setDialogOpen} lines={lines} />
+      <QueenFormDialog open={dialogOpen} onOpenChange={setDialogOpen} lines={lines} apiaries={apiaries} />
     </>
   );
 }

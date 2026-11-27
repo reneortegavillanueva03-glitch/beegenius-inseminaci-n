@@ -10,6 +10,10 @@
       "type": "string",
       "description": "L\u00ednea de cr\u00eda"
     },
+    "apiary": {
+      "type": "string",
+      "description": "Apiario donde est\u00e1 la reina"
+    },
     "status": {
       "type": "string",
       "enum": [

@@ -76,6 +76,14 @@ function QueenDetailPage() {
     },
   });
 
+  const { data: apiaries = [] } = useQuery({
+    queryKey: ["apiaries"],
+    queryFn: async () => {
+      const page = await base44.entities.Apiary.list({ sort: "code", limit: 300 });
+      return page.items;
+    },
+  });
+
   const remove = useMutation({
     mutationFn: () => base44.entities.Queen.delete(queenId),
     onSuccess: () => {
@@ -143,7 +151,8 @@ function QueenDetailPage() {
         <div className="panel p-5 lg:col-span-2">
           <h2 className="font-heading text-[15px] font-bold tracking-tight">Datos de la reina</h2>
           <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
-            <DataItem label="Nacimiento" value={fmtDate(queen.emergenceDate)} />
+            <DataItem label="Fecha de nacimiento" value={fmtDate(queen.emergenceDate)} />
+            <DataItem label="Apiario" value={queen.apiary} />
             <DataItem label="Reina madre" value={queen.motherCode} />
             <DataItem label="Núcleo" value={queen.nucCode} />
             <DataItem label="Inseminación" value={fmtDate(queen.inseminationDate)} />
@@ -237,7 +246,7 @@ function QueenDetailPage() {
         )}
       </div>
 
-      <QueenFormDialog open={editOpen} onOpenChange={setEditOpen} queen={queen} lines={lines} />
+      <QueenFormDialog open={editOpen} onOpenChange={setEditOpen} queen={queen} lines={lines} apiaries={apiaries} />
       <FollowUpDialog open={followUpOpen} onOpenChange={setFollowUpOpen} queen={queen} />
 
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>

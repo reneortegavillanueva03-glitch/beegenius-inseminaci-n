@@ -12,6 +12,7 @@ import { QUEEN_STATUS_OPTIONS } from "@/lib/labels";
 const EMPTY = {
   code: "",
   line: "",
+  apiary: "",
   status: "virgen",
   emergenceDate: "",
   motherCode: "",
@@ -20,7 +21,7 @@ const EMPTY = {
   notes: "",
 };
 
-export default function QueenFormDialog({ open, onOpenChange, queen, lines = [] }) {
+export default function QueenFormDialog({ open, onOpenChange, queen, lines = [], apiaries = [] }) {
   const [form, setForm] = useState(EMPTY);
   const queryClient = useQueryClient();
 
@@ -31,6 +32,7 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [] 
           ? {
               code: queen.code ?? "",
               line: queen.line ?? "",
+              apiary: queen.apiary ?? "",
               status: queen.status ?? "virgen",
               emergenceDate: queen.emergenceDate ?? "",
               motherCode: queen.motherCode ?? "",
@@ -92,6 +94,21 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [] 
             </SelectContent>
           </Select>
         </Field>
+        <Field label="Apiario">
+          <Select value={form.apiary || "none"} onValueChange={(v) => set("apiary", v === "none" ? "" : v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona apiario" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Sin apiario</SelectItem>
+              {apiaries.map((apiary) => (
+                <SelectItem key={apiary.id} value={apiary.code || apiary.name}>
+                  {apiary.code ? `${apiary.code} · ${apiary.name}` : apiary.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Field>
         <Field label="Estado">
           <Select value={form.status} onValueChange={(v) => set("status", v)}>
             <SelectTrigger>
@@ -106,7 +123,7 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [] 
             </SelectContent>
           </Select>
         </Field>
-        <Field label="Nacimiento">
+        <Field label="Fecha de nacimiento">
           <Input type="date" value={form.emergenceDate} onChange={(e) => set("emergenceDate", e.target.value)} />
         </Field>
         <Field label="Reina madre">
