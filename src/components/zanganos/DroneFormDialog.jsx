@@ -104,21 +104,6 @@ export default function DroneFormDialog({ open, onOpenChange, drone, lines = [],
             </SelectContent>
           </Select>
         </Field>
-        <Field label="Colmena de origen">
-          <Select value={form.colony || "none"} onValueChange={(v) => set("colony", v === "none" ? "" : v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Selecciona colmena" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">Sin colmena</SelectItem>
-              {hives.map((hive) => (
-                <SelectItem key={hive.id} value={hive.code}>
-                  {hive.code}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
         <Field label="Estado">
           <Select value={form.status} onValueChange={(v) => set("status", v)}>
             <SelectTrigger>
