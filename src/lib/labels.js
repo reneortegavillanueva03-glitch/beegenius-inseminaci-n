@@ -60,6 +60,17 @@ export const HIVE_STATUS_OPTIONS = Object.entries(HIVE_STATUS).map(([value, item
   label: item.label,
 }));
 
+export const APIARY_STATUS = {
+  activo: { label: "Activo", className: "bg-[hsl(150_40%_93%)] text-[hsl(155_45%_26%)]" },
+  en_revision: { label: "En revisión", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },
+  inactivo: { label: "Inactivo", className: "bg-secondary text-foreground/70" },
+};
+
+export const APIARY_STATUS_OPTIONS = Object.entries(APIARY_STATUS).map(([value, item]) => ({
+  value,
+  label: item.label,
+}));
+
 export const LAYING = {
   sin_postura: { label: "Sin postura", className: "bg-secondary text-foreground/70" },
   postura_inicial: { label: "Postura inicial", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },
