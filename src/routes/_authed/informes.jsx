@@ -4,6 +4,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/layout/PageHeader";
 import StatCard from "@/components/dashboard/StatCard";
+import ExportExcelButton from "@/components/informes/ExportExcelButton";
 import { Activity, CheckCircle2, Crown, Syringe } from "lucide-react";
 
 export const Route = createFileRoute("/_authed/informes")({
@@ -42,6 +43,7 @@ function ReportsPage() {
         eyebrow="Programa de cría"
         title="Informes"
         description="Resultados del programa: aceptación de inseminaciones, avance mensual y rendimiento por línea."
+        actions={<ExportExcelButton />}
       />
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
