@@ -59,7 +59,7 @@ export default function PlaceFormDialog({ open, onOpenChange, place }) {
           <Input value={form.code} onChange={(e) => set("code", e.target.value)} placeholder="APN-L-01" />
         </Field>
         <Field label="Nombre *">
-          <Input value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="Fila 2" />
+          <Input value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="Escribe lugar" />
         </Field>
       </div>
       <Field label="Notas">
