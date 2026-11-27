@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
@@ -51,6 +51,22 @@ export default function InseminationFormDialog({ open, onOpenChange, queens = []
   }, [open, insemination]);
 
   const set = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
+
+  const { data: lines = [] } = useQuery({
+    queryKey: ["lines"],
+    queryFn: async () => {
+      const page = await base44.entities.BreedingLine.list({ sort: "name", limit: 100 });
+      return page.items;
+    },
+  });
+
+  const lineOptions = lines.map((line) => ({
+    value: line.code || line.name,
+    label: line.code ? `${line.code} · ${line.name}` : line.name,
+  }));
+  if (form.droneLine && !lineOptions.some((option) => option.value === form.droneLine)) {
+    lineOptions.unshift({ value: form.droneLine, label: form.droneLine });
+  }
 
   const mutation = useMutation({
     mutationFn: async (payload) => {
@@ -128,7 +144,19 @@ export default function InseminationFormDialog({ open, onOpenChange, queens = []
           <Input type="date" value={form.date} onChange={(e) => set("date", e.target.value)} />
         </Field>
         <Field label="Línea de zánganos">
-          <Input value={form.droneLine} onChange={(e) => set("droneLine", e.target.value)} placeholder="APN-L-07" />
+          <Select value={form.droneLine || "none"} onValueChange={(v) => set("droneLine", v === "none" ? "" : v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona línea" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Sin línea</SelectItem>
+              {lineOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </Field>
         <Field label="Origen de zánganos">
           <Input
