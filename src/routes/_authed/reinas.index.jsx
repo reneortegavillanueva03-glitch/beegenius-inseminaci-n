@@ -54,14 +54,6 @@ function QueensPage() {
     },
   });
 
-  const { data: nucs = [] } = useQuery({
-    queryKey: ["nucs"],
-    queryFn: async () => {
-      const page = await base44.entities.MatingNuc.list({ sort: "number", limit: 300 });
-      return page.items;
-    },
-  });
-
   const remove = useMutation({
     mutationFn: (id) => base44.entities.Queen.delete(id),
     onSuccess: () => {
@@ -87,7 +79,7 @@ function QueensPage() {
       <PageHeader
         eyebrow="Programa de cría"
         title="Reinas"
-        description="Registro de reinas del apiario: origen, línea, estado reproductivo y núcleo asignado."
+        description="Registro de reinas del apiario: origen, línea y estado reproductivo."
         actions={
           <Button onClick={openNew}>
             <Plus className="mr-1.5 h-4 w-4" />
@@ -143,10 +135,10 @@ function QueensPage() {
           />
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[780px] text-left">
+            <table className="w-full min-w-[680px] text-left">
               <thead>
                 <tr className="border-b bg-secondary/50">
-                  {["Código", "Línea", "Estado", "Traslarve", "Enjaulado", "Apiario", "Núcleo", "Colmena", "Nacimiento", "Postura", ""].map((head, index) => (
+                  {["Código", "Línea", "Estado", "Traslarve", "Enjaulado", "Apiario", "Nacimiento", "Postura", ""].map((head, index) => (
                     <th
                       key={head || `col-${index}`}
                       className="px-5 py-2.5 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
@@ -175,8 +167,6 @@ function QueensPage() {
                     <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.graftDate)}</td>
                     <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.cageDate)}</td>
                     <td className="px-5 py-3 text-[12.5px] text-foreground/80">{queen.apiary || "—"}</td>
-                    <td className="px-5 py-3 text-[12.5px] text-foreground/80">{queen.nucCode || "—"}</td>
-                    <td className="px-5 py-3 text-[12.5px] text-foreground/80">{queen.hiveCode || "—"}</td>
                     <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.emergenceDate)}</td>
                     <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.layingDate)}</td>
                     <td className="px-5 py-3">
@@ -217,7 +207,6 @@ function QueensPage() {
         queen={editing}
         lines={lines}
         apiaries={apiaries}
-        nucs={nucs}
       />
     </>
   );

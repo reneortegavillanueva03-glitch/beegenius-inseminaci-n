@@ -18,14 +18,12 @@ const EMPTY = {
   graftDate: "",
   cageDate: "",
   motherCode: "",
-  nucCode: "",
-  hiveCode: "",
   inseminationDate: "",
   layingDate: "",
   notes: "",
 };
 
-export default function QueenFormDialog({ open, onOpenChange, queen, lines = [], apiaries = [], nucs = [] }) {
+export default function QueenFormDialog({ open, onOpenChange, queen, lines = [], apiaries = [] }) {
   const [form, setForm] = useState(EMPTY);
   const queryClient = useQueryClient();
 
@@ -42,8 +40,6 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
               graftDate: queen.graftDate ?? "",
               cageDate: queen.cageDate ?? "",
               motherCode: queen.motherCode ?? "",
-              nucCode: queen.nucCode ?? "",
-              hiveCode: queen.hiveCode ?? "",
               inseminationDate: queen.inseminationDate ?? "",
               layingDate: queen.layingDate ?? "",
               notes: queen.notes ?? "",
@@ -59,14 +55,6 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
     queryKey: ["mother-queens"],
     queryFn: async () => {
       const page = await base44.entities.MotherQueen.list({ sort: "code", limit: 300 });
-      return page.items;
-    },
-  });
-
-  const { data: hives = [] } = useQuery({
-    queryKey: ["hives"],
-    queryFn: async () => {
-      const page = await base44.entities.Hive.list({ sort: "code", limit: 300 });
       return page.items;
     },
   });
@@ -171,50 +159,6 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
               {motherOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-        <Field
-          label="Colmena"
-          hint={form.nucCode ? "No disponible: la reina está asignada a un núcleo." : undefined}
-        >
-          <Select
-            value={form.hiveCode || "none"}
-            disabled={!!form.nucCode}
-            onValueChange={(v) => setForm((prev) => ({ ...prev, hiveCode: v === "none" ? "" : v, nucCode: "" }))}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Selecciona colmena" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">Sin colmena</SelectItem>
-              {hives.map((hive) => (
-                <SelectItem key={hive.id} value={hive.code}>
-                  {hive.location ? `${hive.code} · ${hive.location}` : hive.code}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-        <Field
-          label="Núcleo"
-          hint={form.hiveCode ? "No disponible: la reina está asignada a una colmena." : undefined}
-        >
-          <Select
-            value={form.nucCode || "none"}
-            disabled={!!form.hiveCode}
-            onValueChange={(v) => setForm((prev) => ({ ...prev, nucCode: v === "none" ? "" : v, hiveCode: "" }))}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Selecciona núcleo" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">Sin núcleo</SelectItem>
-              {nucs.map((nuc) => (
-                <SelectItem key={nuc.id} value={nuc.number}>
-                  {nuc.location ? `${nuc.number} · ${nuc.location}` : nuc.number}
                 </SelectItem>
               ))}
             </SelectContent>

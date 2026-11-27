@@ -84,14 +84,6 @@ function QueenDetailPage() {
     },
   });
 
-  const { data: nucs = [] } = useQuery({
-    queryKey: ["nucs"],
-    queryFn: async () => {
-      const page = await base44.entities.MatingNuc.list({ sort: "number", limit: 300 });
-      return page.items;
-    },
-  });
-
   const remove = useMutation({
     mutationFn: () => base44.entities.Queen.delete(queenId),
     onSuccess: () => {
@@ -137,7 +129,6 @@ function QueenDetailPage() {
           </div>
           <p className="mt-1 text-[13px] text-muted-foreground">
             {queen.line ? `Línea ${queen.line}` : "Sin línea asignada"}
-            {queen.nucCode ? ` · Núcleo ${queen.nucCode}` : ""}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -163,8 +154,6 @@ function QueenDetailPage() {
             <DataItem label="Fecha de enjaulado" value={fmtDate(queen.cageDate)} />
             <DataItem label="Apiario" value={queen.apiary} />
             <DataItem label="Reina madre" value={queen.motherCode} />
-            <DataItem label="Núcleo" value={queen.nucCode} />
-            <DataItem label="Colmena" value={queen.hiveCode} />
             <DataItem label="Fecha de nacimiento" value={fmtDate(queen.emergenceDate)} />
             <DataItem label="Inicio de postura" value={fmtDate(queen.layingDate)} />
             <DataItem label="Estado" value={QUEEN_STATUS[queen.status]?.label} />
@@ -262,7 +251,6 @@ function QueenDetailPage() {
         queen={queen}
         lines={lines}
         apiaries={apiaries}
-        nucs={nucs}
       />
       <FollowUpDialog open={followUpOpen} onOpenChange={setFollowUpOpen} queen={queen} />
 
