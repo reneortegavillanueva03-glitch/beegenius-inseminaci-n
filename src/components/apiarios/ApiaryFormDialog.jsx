@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Field from "@/components/common/Field";
 import FormDialog from "@/components/common/FormDialog";
 import { APIARY_STATUS_OPTIONS } from "@/lib/labels";
+import useAppUsers, { userLabel } from "@/lib/useAppUsers";
 
 const EMPTY = {
   code: "",
@@ -59,6 +60,16 @@ export default function ApiaryFormDialog({ open, onOpenChange, apiary }) {
     }
     return options;
   }, [places, form.location]);
+
+  const { data: users = [] } = useAppUsers();
+
+  const ownerOptions = useMemo(() => {
+    const options = users.map((user) => ({ value: userLabel(user), label: userLabel(user) }));
+    if (form.owner && !options.some((option) => option.value === form.owner)) {
+      options.unshift({ value: form.owner, label: form.owner });
+    }
+    return options;
+  }, [users, form.owner]);
 
   const mutation = useMutation({
     mutationFn: (payload) =>
@@ -116,7 +127,19 @@ export default function ApiaryFormDialog({ open, onOpenChange, apiary }) {
           </Select>
         </Field>
         <Field label="Responsable">
-          <Input value={form.owner} onChange={(e) => set("owner", e.target.value)} placeholder="Nombre del apicultor" />
+          <Select value={form.owner || "none"} onValueChange={(v) => set("owner", v === "none" ? "" : v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona un usuario" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Sin responsable</SelectItem>
+              {ownerOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </Field>
         <Field label="Estado">
           <Select value={form.status} onValueChange={(v) => set("status", v)}>

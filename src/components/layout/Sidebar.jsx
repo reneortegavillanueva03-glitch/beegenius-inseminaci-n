@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { LayoutDashboard, Crown, Bug, Syringe, Boxes, Container, Hexagon, ListChecks, BarChart3, Map, MapPin, X, LogOut } from "lucide-react";
+import { LayoutDashboard, Crown, Bug, Syringe, Boxes, Container, Hexagon, ListChecks, BarChart3, Map, MapPin, Users, X, LogOut } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +24,10 @@ const SECTIONS = [
       { href: "/tareas", label: "Tareas", icon: ListChecks },
       { href: "/informes", label: "Informes", icon: BarChart3 },
     ],
+  },
+  {
+    title: "Administración",
+    items: [{ href: "/usuarios", label: "Usuarios", icon: Users }],
   },
 ];
 
