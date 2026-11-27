@@ -21,7 +21,7 @@ const EMPTY = {
   notes: "",
 };
 
-export default function QueenFormDialog({ open, onOpenChange, queen, lines = [], apiaries = [] }) {
+export default function QueenFormDialog({ open, onOpenChange, queen, lines = [], apiaries = [], nucs = [] }) {
   const [form, setForm] = useState(EMPTY);
   const queryClient = useQueryClient();
 
@@ -130,7 +130,19 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
           <Input value={form.motherCode} onChange={(e) => set("motherCode", e.target.value)} placeholder="APN-R-25-042" />
         </Field>
         <Field label="Núcleo">
-          <Input value={form.nucCode} onChange={(e) => set("nucCode", e.target.value)} placeholder="APN-N-12" />
+          <Select value={form.nucCode || "none"} onValueChange={(v) => set("nucCode", v === "none" ? "" : v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona núcleo" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Sin núcleo</SelectItem>
+              {nucs.map((nuc) => (
+                <SelectItem key={nuc.id} value={nuc.number}>
+                  {nuc.location ? `${nuc.number} · ${nuc.location}` : nuc.number}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </Field>
         <Field label="Fecha de inseminación" className="sm:col-span-2">
           <Input

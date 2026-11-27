@@ -84,6 +84,14 @@ function QueenDetailPage() {
     },
   });
 
+  const { data: nucs = [] } = useQuery({
+    queryKey: ["nucs"],
+    queryFn: async () => {
+      const page = await base44.entities.MatingNuc.list({ sort: "number", limit: 300 });
+      return page.items;
+    },
+  });
+
   const remove = useMutation({
     mutationFn: () => base44.entities.Queen.delete(queenId),
     onSuccess: () => {
@@ -246,7 +254,14 @@ function QueenDetailPage() {
         )}
       </div>
 
-      <QueenFormDialog open={editOpen} onOpenChange={setEditOpen} queen={queen} lines={lines} apiaries={apiaries} />
+      <QueenFormDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        queen={queen}
+        lines={lines}
+        apiaries={apiaries}
+        nucs={nucs}
+      />
       <FollowUpDialog open={followUpOpen} onOpenChange={setFollowUpOpen} queen={queen} />
 
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>

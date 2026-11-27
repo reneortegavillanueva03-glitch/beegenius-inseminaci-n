@@ -49,6 +49,14 @@ function QueensPage() {
     },
   });
 
+  const { data: nucs = [] } = useQuery({
+    queryKey: ["nucs"],
+    queryFn: async () => {
+      const page = await base44.entities.MatingNuc.list({ sort: "number", limit: 300 });
+      return page.items;
+    },
+  });
+
   return (
     <>
       <PageHeader
@@ -152,7 +160,13 @@ function QueensPage() {
         )}
       </div>
 
-      <QueenFormDialog open={dialogOpen} onOpenChange={setDialogOpen} lines={lines} apiaries={apiaries} />
+      <QueenFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        lines={lines}
+        apiaries={apiaries}
+        nucs={nucs}
+      />
     </>
   );
 }
