@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Menu, ChevronDown, LogOut, CalendarDays } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
+import TaskAlerts from "@/components/layout/TaskAlerts";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,6 +47,7 @@ export default function Topbar({ onMenu }) {
           <span className="hidden rounded-full border border-border bg-card px-3 py-1 text-[11.5px] font-medium text-muted-foreground md:inline">
             Temporada 2026
           </span>
+          <TaskAlerts />
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 rounded-full border border-border bg-card py-1 pl-1 pr-2.5 transition-colors hover:bg-secondary">
               <span className="grid h-7 w-7 place-items-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">
