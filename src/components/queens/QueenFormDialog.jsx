@@ -182,18 +182,6 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
         <Field label="Fecha de nacimiento" className="sm:col-span-2">
           <Input type="date" value={form.emergenceDate} onChange={(e) => set("emergenceDate", e.target.value)} />
         </Field>
-        <Field
-          label="Fecha de inseminación"
-          hint={form.status === "inseminada" ? undefined : "Disponible al marcar la reina como inseminada."}
-          className="sm:col-span-2"
-        >
-          <Input
-            type="date"
-            value={form.inseminationDate}
-            disabled={form.status !== "inseminada"}
-            onChange={(e) => set("inseminationDate", e.target.value)}
-          />
-        </Field>
       </div>
       <Field label="Notas">
         <Textarea value={form.notes} onChange={(e) => set("notes", e.target.value)} rows={3} />
