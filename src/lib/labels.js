@@ -89,6 +89,27 @@ export const TASK_TYPE = {
 
 export const TASK_TYPE_OPTIONS = Object.entries(TASK_TYPE).map(([value, item]) => ({ value, label: item.label }));
 
+export const INSPECTION_TYPE = {
+  rutina: { label: "Rutina", className: "bg-[hsl(203_30%_93%)] text-[hsl(203_35%_32%)]" },
+  postura: { label: "Postura", className: "bg-[hsl(150_40%_93%)] text-[hsl(155_45%_26%)]" },
+  sanidad: { label: "Sanidad", className: "bg-[hsl(4_70%_95%)] text-[hsl(4_65%_40%)]" },
+  alimentacion: { label: "Alimentación", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },
+  otro: { label: "Otro", className: "bg-secondary text-foreground/70" },
+};
+
+export const INSPECTION_TYPE_OPTIONS = Object.entries(INSPECTION_TYPE).map(([value, item]) => ({
+  value,
+  label: item.label,
+}));
+
+export const COLONY = {
+  fuerte: { label: "Fuerte", className: "bg-[hsl(150_40%_93%)] text-[hsl(155_45%_26%)]" },
+  media: { label: "Media", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },
+  debil: { label: "Débil", className: "bg-[hsl(4_70%_95%)] text-[hsl(4_65%_40%)]" },
+};
+
+export const COLONY_OPTIONS = Object.entries(COLONY).map(([value, item]) => ({ value, label: item.label }));
+
 export function fmtDate(value) {
   if (!value) return "—";
   const date = new Date(value);
