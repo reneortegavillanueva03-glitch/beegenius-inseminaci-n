@@ -50,7 +50,7 @@ function NucsPage() {
       <PageHeader
         eyebrow="Operación"
         title="Núcleos"
-        description="Núcleos de fecundación y bancos de reinas: ocupación, ubicación y reina asignada."
+        description="Núcleos de fecundación y bancos de reinas: ocupación, lugar y reina asignada."
         actions={
           <Button onClick={openNew}>
             <Plus className="mr-1.5 h-4 w-4" />
@@ -88,7 +88,7 @@ function NucsPage() {
                   <p className="num font-heading text-[20px] font-extrabold tracking-tight">{nuc.number}</p>
                   <p className="mt-0.5 flex items-center gap-1 text-[11.5px] text-muted-foreground">
                     <MapPin className="h-3 w-3" />
-                    {nuc.location || "Sin ubicación"}
+                    {nuc.location || "Sin lugar"}
                   </p>
                 </div>
                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(nuc)}>
