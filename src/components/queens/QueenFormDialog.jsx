@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
@@ -46,6 +46,22 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
   }, [open, queen]);
 
   const set = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
+
+  const { data: mothers = [] } = useQuery({
+    queryKey: ["mother-queens"],
+    queryFn: async () => {
+      const page = await base44.entities.MotherQueen.list({ sort: "code", limit: 300 });
+      return page.items;
+    },
+  });
+
+  const motherOptions = mothers.map((mother) => ({
+    value: mother.code,
+    label: mother.line ? `${mother.code} · ${mother.line}` : mother.code,
+  }));
+  if (form.motherCode && !motherOptions.some((option) => option.value === form.motherCode)) {
+    motherOptions.unshift({ value: form.motherCode, label: form.motherCode });
+  }
 
   const mutation = useMutation({
     mutationFn: (payload) =>
@@ -127,7 +143,19 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
           <Input type="date" value={form.emergenceDate} onChange={(e) => set("emergenceDate", e.target.value)} />
         </Field>
         <Field label="Reina madre">
-          <Input value={form.motherCode} onChange={(e) => set("motherCode", e.target.value)} placeholder="APN-R-25-042" />
+          <Select value={form.motherCode || "none"} onValueChange={(v) => set("motherCode", v === "none" ? "" : v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona reina madre" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Sin reina madre</SelectItem>
+              {motherOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </Field>
         <Field label="Núcleo">
           <Select value={form.nucCode || "none"} onValueChange={(v) => set("nucCode", v === "none" ? "" : v)}>

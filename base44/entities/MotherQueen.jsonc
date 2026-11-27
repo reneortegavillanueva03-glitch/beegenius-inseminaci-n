@@ -1,0 +1,83 @@
+{
+  "type": "object",
+  "name": "MotherQueen",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo de la reina madre, por ejemplo APN-RM-01"
+    },
+    "line": {
+      "type": "string",
+      "description": "L\u00ednea de cr\u00eda de la reina madre"
+    },
+    "apiary": {
+      "type": "string",
+      "description": "Apiario donde est\u00e1 la reina madre"
+    },
+    "selectionYear": {
+      "type": "number",
+      "description": "A\u00f1o de selecci\u00f3n"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "activa",
+        "retenida",
+        "retirada"
+      ],
+      "enumColors": [
+        "green",
+        "yellow",
+        "gray"
+      ],
+      "default": "activa"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "code"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

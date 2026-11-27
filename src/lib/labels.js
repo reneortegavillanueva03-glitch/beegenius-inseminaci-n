@@ -11,6 +11,17 @@ export const QUEEN_STATUS_OPTIONS = Object.entries(QUEEN_STATUS).map(([value, it
   label: item.label,
 }));
 
+export const MOTHER_QUEEN_STATUS = {
+  activa: { label: "Activa", className: "bg-[hsl(150_40%_93%)] text-[hsl(155_45%_26%)]" },
+  retenida: { label: "Retenida", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },
+  retirada: { label: "Retirada", className: "bg-secondary text-foreground/70" },
+};
+
+export const MOTHER_QUEEN_STATUS_OPTIONS = Object.entries(MOTHER_QUEEN_STATUS).map(([value, item]) => ({
+  value,
+  label: item.label,
+}));
+
 export const RESULT = {
   pendiente: { label: "Pendiente", className: "bg-[hsl(var(--honey-soft))] text-[hsl(32_65%_30%)]" },
   aceptada: { label: "Aceptada", className: "bg-[hsl(150_40%_93%)] text-[hsl(155_45%_26%)]" },
