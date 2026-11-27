@@ -74,7 +74,7 @@ export default function NucFormDialog({ open, onOpenChange, nuc, queens = [] }) 
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Número *">
-          <Input value={form.number} onChange={(e) => set("number", e.target.value)} placeholder="N-12" />
+          <Input value={form.number} onChange={(e) => set("number", e.target.value)} placeholder="APN-N-12" />
         </Field>
         <Field label="Ubicación">
           <Input value={form.location} onChange={(e) => set("location", e.target.value)} placeholder="Fila 2" />

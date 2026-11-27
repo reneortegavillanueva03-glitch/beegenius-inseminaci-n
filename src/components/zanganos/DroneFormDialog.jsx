@@ -72,7 +72,7 @@ export default function DroneFormDialog({ open, onOpenChange, drone, lines = [],
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Código *">
-          <Input value={form.code} onChange={(e) => set("code", e.target.value)} placeholder="Z-26-014" />
+          <Input value={form.code} onChange={(e) => set("code", e.target.value)} placeholder="APN-Z-26-014" />
         </Field>
         <Field label="Línea">
           <Select value={form.line || "none"} onValueChange={(v) => set("line", v === "none" ? "" : v)}>

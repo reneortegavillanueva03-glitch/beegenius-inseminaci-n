@@ -139,7 +139,7 @@ export default function LineFormDialog({ open, onOpenChange, line }) {
           <Input value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="Abeja negra seleccionada" />
         </Field>
         <Field label="Código">
-          <Input value={form.code} onChange={(e) => set("code", e.target.value)} placeholder="L-04" />
+          <Input value={form.code} onChange={(e) => set("code", e.target.value)} placeholder="APN-L-04" />
         </Field>
         <Field label="Origen – lugar" className="sm:col-span-2">
           {customOrigin ? (

@@ -82,7 +82,7 @@ export default function HiveFormDialog({ open, onOpenChange, hive, queens = [], 
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Código *">
-          <Input value={form.code} onChange={(e) => set("code", e.target.value)} placeholder="C-07" />
+          <Input value={form.code} onChange={(e) => set("code", e.target.value)} placeholder="APN-C-07" />
         </Field>
         <Field label="Ubicación">
           <Input value={form.location} onChange={(e) => set("location", e.target.value)} placeholder="Fila 3" />

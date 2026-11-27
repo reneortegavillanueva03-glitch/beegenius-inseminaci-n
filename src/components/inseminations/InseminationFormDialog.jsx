@@ -108,13 +108,13 @@ export default function InseminationFormDialog({ open, onOpenChange, queens = []
           <Input type="date" value={form.date} onChange={(e) => set("date", e.target.value)} />
         </Field>
         <Field label="Línea de zánganos">
-          <Input value={form.droneLine} onChange={(e) => set("droneLine", e.target.value)} placeholder="L-07" />
+          <Input value={form.droneLine} onChange={(e) => set("droneLine", e.target.value)} placeholder="APN-L-07" />
         </Field>
         <Field label="Origen de zánganos">
           <Input
             value={form.droneOrigin}
             onChange={(e) => set("droneOrigin", e.target.value)}
-            placeholder="Colmena 14"
+            placeholder="APN-C-14"
           />
         </Field>
         <Field label="N.º de zánganos">

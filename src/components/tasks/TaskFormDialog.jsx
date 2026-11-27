@@ -54,7 +54,7 @@ export default function TaskFormDialog({ open, onOpenChange }) {
         <Input
           value={form.title}
           onChange={(e) => set("title", e.target.value)}
-          placeholder="Revisión de postura · R-26-118"
+          placeholder="Revisión de postura · APN-R-26-118"
         />
       </Field>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -79,7 +79,7 @@ export default function TaskFormDialog({ open, onOpenChange }) {
           <Input
             value={form.queenCode}
             onChange={(e) => set("queenCode", e.target.value)}
-            placeholder="R-26-118"
+            placeholder="APN-R-26-118"
           />
         </Field>
       </div>

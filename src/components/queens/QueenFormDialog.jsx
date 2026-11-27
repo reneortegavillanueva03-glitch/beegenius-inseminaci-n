@@ -76,7 +76,7 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [] 
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Código *">
-          <Input value={form.code} onChange={(e) => set("code", e.target.value)} placeholder="R-26-118" />
+          <Input value={form.code} onChange={(e) => set("code", e.target.value)} placeholder="APN-R-26-118" />
         </Field>
         <Field label="Línea">
           <Select value={form.line || undefined} onValueChange={(v) => set("line", v)}>
@@ -110,10 +110,10 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [] 
           <Input type="date" value={form.emergenceDate} onChange={(e) => set("emergenceDate", e.target.value)} />
         </Field>
         <Field label="Reina madre">
-          <Input value={form.motherCode} onChange={(e) => set("motherCode", e.target.value)} placeholder="R-25-042" />
+          <Input value={form.motherCode} onChange={(e) => set("motherCode", e.target.value)} placeholder="APN-R-25-042" />
         </Field>
         <Field label="Núcleo">
-          <Input value={form.nucCode} onChange={(e) => set("nucCode", e.target.value)} placeholder="N-12" />
+          <Input value={form.nucCode} onChange={(e) => set("nucCode", e.target.value)} placeholder="APN-N-12" />
         </Field>
         <Field label="Fecha de inseminación" className="sm:col-span-2">
           <Input
