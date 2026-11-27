@@ -68,6 +68,22 @@ export default function InseminationFormDialog({ open, onOpenChange, queens = []
     lineOptions.unshift({ value: form.droneLine, label: form.droneLine });
   }
 
+  const { data: mothers = [] } = useQuery({
+    queryKey: ["mother-queens"],
+    queryFn: async () => {
+      const page = await base44.entities.MotherQueen.list({ sort: "code", limit: 100 });
+      return page.items;
+    },
+  });
+
+  const motherOptions = mothers.map((mother) => ({
+    value: mother.code,
+    label: mother.line ? `${mother.code} · ${mother.line}` : mother.code,
+  }));
+  if (form.droneOrigin && !motherOptions.some((option) => option.value === form.droneOrigin)) {
+    motherOptions.unshift({ value: form.droneOrigin, label: form.droneOrigin });
+  }
+
   const mutation = useMutation({
     mutationFn: async (payload) => {
       if (insemination) {
@@ -159,11 +175,19 @@ export default function InseminationFormDialog({ open, onOpenChange, queens = []
           </Select>
         </Field>
         <Field label="Origen de zánganos">
-          <Input
-            value={form.droneOrigin}
-            onChange={(e) => set("droneOrigin", e.target.value)}
-            placeholder="APN-C-14"
-          />
+          <Select value={form.droneOrigin || "none"} onValueChange={(v) => set("droneOrigin", v === "none" ? "" : v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona reina madre" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Sin origen</SelectItem>
+              {motherOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </Field>
         <Field label="N.º de zánganos">
           <Input
