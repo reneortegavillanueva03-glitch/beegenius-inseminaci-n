@@ -15,6 +15,7 @@ const EMPTY = {
   apiary: "",
   status: "virgen",
   emergenceDate: "",
+  graftDate: "",
   motherCode: "",
   nucCode: "",
   inseminationDate: "",
@@ -35,6 +36,7 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
               apiary: queen.apiary ?? "",
               status: queen.status ?? "virgen",
               emergenceDate: queen.emergenceDate ?? "",
+              graftDate: queen.graftDate ?? "",
               motherCode: queen.motherCode ?? "",
               nucCode: queen.nucCode ?? "",
               inseminationDate: queen.inseminationDate ?? "",
@@ -141,6 +143,9 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
         </Field>
         <Field label="Fecha de nacimiento">
           <Input type="date" value={form.emergenceDate} onChange={(e) => set("emergenceDate", e.target.value)} />
+        </Field>
+        <Field label="Fecha de traslarve">
+          <Input type="date" value={form.graftDate} onChange={(e) => set("graftDate", e.target.value)} />
         </Field>
         <Field label="Reina madre">
           <Select value={form.motherCode || "none"} onValueChange={(v) => set("motherCode", v === "none" ? "" : v)}>
