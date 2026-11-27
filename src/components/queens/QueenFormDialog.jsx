@@ -20,6 +20,7 @@ const EMPTY = {
   motherCode: "",
   nucCode: "",
   inseminationDate: "",
+  layingDate: "",
   notes: "",
 };
 
@@ -42,6 +43,7 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
               motherCode: queen.motherCode ?? "",
               nucCode: queen.nucCode ?? "",
               inseminationDate: queen.inseminationDate ?? "",
+              layingDate: queen.layingDate ?? "",
               notes: queen.notes ?? "",
             }
           : EMPTY
@@ -181,6 +183,18 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
         </Field>
         <Field label="Fecha de nacimiento" className="sm:col-span-2">
           <Input type="date" value={form.emergenceDate} onChange={(e) => set("emergenceDate", e.target.value)} />
+        </Field>
+        <Field
+          label="Fecha de inicio de postura"
+          hint={form.status === "inseminada" ? "Disponible en estados distintos a inseminada." : undefined}
+          className="sm:col-span-2"
+        >
+          <Input
+            type="date"
+            value={form.layingDate}
+            disabled={form.status === "inseminada"}
+            onChange={(e) => set("layingDate", e.target.value)}
+          />
         </Field>
       </div>
       <Field label="Notas">
