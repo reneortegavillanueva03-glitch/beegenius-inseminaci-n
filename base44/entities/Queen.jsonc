@@ -42,6 +42,11 @@
       "format": "date",
       "description": "Fecha de traslarve (transferencia de larvas)"
     },
+    "cageDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de enjaulado de la reina"
+    },
     "motherCode": {
       "type": "string",
       "description": "Reina madre"

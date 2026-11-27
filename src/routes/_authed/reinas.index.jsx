@@ -146,7 +146,7 @@ function QueensPage() {
             <table className="w-full min-w-[780px] text-left">
               <thead>
                 <tr className="border-b bg-secondary/50">
-                  {["Código", "Línea", "Estado", "Traslarve", "Nacimiento", "Apiario", "Núcleo", "Inseminación", "Postura", ""].map((head, index) => (
+                  {["Código", "Línea", "Estado", "Traslarve", "Enjaulado", "Apiario", "Núcleo", "Nacimiento", "Postura", ""].map((head, index) => (
                     <th
                       key={head || `col-${index}`}
                       className="px-5 py-2.5 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
@@ -173,10 +173,10 @@ function QueensPage() {
                       <StatusBadge value={queen.status} map={QUEEN_STATUS} />
                     </td>
                     <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.graftDate)}</td>
-                    <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.emergenceDate)}</td>
+                    <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.cageDate)}</td>
                     <td className="px-5 py-3 text-[12.5px] text-foreground/80">{queen.apiary || "—"}</td>
                     <td className="px-5 py-3 text-[12.5px] text-foreground/80">{queen.nucCode || "—"}</td>
-                    <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.inseminationDate)}</td>
+                    <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.emergenceDate)}</td>
                     <td className="px-5 py-3 text-[12.5px] text-muted-foreground">{fmtDate(queen.layingDate)}</td>
                     <td className="px-5 py-3">
                       <div className="flex items-center justify-end gap-1">

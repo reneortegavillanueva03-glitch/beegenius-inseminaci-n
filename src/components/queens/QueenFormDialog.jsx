@@ -16,6 +16,7 @@ const EMPTY = {
   status: "virgen",
   emergenceDate: "",
   graftDate: "",
+  cageDate: "",
   motherCode: "",
   nucCode: "",
   inseminationDate: "",
@@ -37,6 +38,7 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
               status: queen.status ?? "virgen",
               emergenceDate: queen.emergenceDate ?? "",
               graftDate: queen.graftDate ?? "",
+              cageDate: queen.cageDate ?? "",
               motherCode: queen.motherCode ?? "",
               nucCode: queen.nucCode ?? "",
               inseminationDate: queen.inseminationDate ?? "",
@@ -144,8 +146,8 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
         <Field label="Fecha de traslarve">
           <Input type="date" value={form.graftDate} onChange={(e) => set("graftDate", e.target.value)} />
         </Field>
-        <Field label="Fecha de nacimiento">
-          <Input type="date" value={form.emergenceDate} onChange={(e) => set("emergenceDate", e.target.value)} />
+        <Field label="Fecha de enjaulado">
+          <Input type="date" value={form.cageDate} onChange={(e) => set("cageDate", e.target.value)} />
         </Field>
         <Field label="Reina madre">
           <Select value={form.motherCode || "none"} onValueChange={(v) => set("motherCode", v === "none" ? "" : v)}>
@@ -177,12 +179,8 @@ export default function QueenFormDialog({ open, onOpenChange, queen, lines = [],
             </SelectContent>
           </Select>
         </Field>
-        <Field label="Fecha de inseminación" className="sm:col-span-2">
-          <Input
-            type="date"
-            value={form.inseminationDate}
-            onChange={(e) => set("inseminationDate", e.target.value)}
-          />
+        <Field label="Fecha de nacimiento" className="sm:col-span-2">
+          <Input type="date" value={form.emergenceDate} onChange={(e) => set("emergenceDate", e.target.value)} />
         </Field>
       </div>
       <Field label="Notas">
